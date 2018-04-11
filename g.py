@@ -15,7 +15,7 @@ def serve_css(css):
     print("Serving " + css)
     return flask.send_from_directory("css", css + ".css")
 
-@app.route("/heyu/status/")
+@app.route("/heyu/status")
 def handle_status():
     try:
         status = heyu.get_status()
@@ -27,4 +27,16 @@ def handle_status():
 @app.route("/heyu/commands/<command>", methods=["POST"])
 def handle_command(command):
     print("Got command " + command)
+    if command.startswith("all_"):
+        if command == "all_on":
+            heyu.all_on()
+        else:
+            heyu.all_off()
+    elif "_" in command:
+        (hu, on_or_off) = command.split("_")
+        if on_or_off == "on":
+            heyu.turn_on(hu)
+        else:
+            heyu.turn_off(hu)
+
     return json.dumps({})
