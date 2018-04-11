@@ -1,0 +1,9 @@
+#/usr/bin/env bash
+
+DIR=/home/don/heyuG
+
+cd $DIR
+. venv/bin/activate
+export FLASK_APP=g.py
+flask run &
+echo $! > /tmp/heyuG.pid

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+if [[ ! -e /tmp/heyuG.pid ]]; then
+    echo "Server not running, exiting"
+    exit 1
+fi
+
+pid=$(cat /tmp/heyuG.pid)
+kill $pid
+sleep 3
+
+echo "Finished stopping heyuG server"
+rm /tmp/heyuG.pid
