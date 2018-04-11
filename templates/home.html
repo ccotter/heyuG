@@ -53,6 +53,11 @@ set_button_handler("stop");
 set_button_handler("all_on");
 set_button_handler("all_off");
 
+for (var i = 1; i < 9; ++i) {
+    set_button_handler("a" + i + "_on");
+    set_button_handler("a" + i + "_off");
+}
+
 fetch_status();
 
 });
