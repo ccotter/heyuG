@@ -31,9 +31,16 @@
 
 $(document).ready(function() {
 
+function fetch_status() {
+    $.get("/heyu/status", function(status) {
+        $("#status").text(status);
+    });
+}
+
 function handle_post(which) {
     $.post("/heyu/commands/" + which, {}, function() {
         console.log("Finished post for", which, "button");
+        fetch_status();
     });
 }
 
@@ -43,13 +50,17 @@ function set_button_handler(which) {
 
 set_button_handler("start");
 set_button_handler("stop");
+set_button_handler("all_on");
+set_button_handler("all_off");
+
+fetch_status();
 
 });
 
   </script>
 
 </head>
-<body>
+<body style="zoom: 150%">
 
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -57,25 +68,41 @@ set_button_handler("stop");
     <div class="row">
       <div class="one-half column" style="margin-top: 25%">
         <h4>Heyu X10</h4>
-        <p>This index.html page is a placeholder with the CSS, font and favicon. It's just waiting for you to add some content! If you need some help hit up the <a href="http://www.getskeleton.com">Skeleton documentation</a>.</p>
+        <p>Control your X10 via the control board below</p>
         <input class="button-primary" id="start" type="button" value="Start">
         <input class="button-primary" id="stop" type="button"  value="Stop">
         <br/>
-        <input class="button-primary" id="start" type="button" value="Start">
-        <input class="button-primary" id="stop" type="button"  value="Stop">
+        <input class="button-primary" id="all_on" type="button" value="All On">
+        <input class="button-primary" id="all_off" type="button"  value="All Off">
         <br/>
-        <input class="button-primary" id="start" type="button" value="Start">
-        <input class="button-primary" id="stop" type="button"  value="Stop">
+        <input class="button-primary" id="a1_on" type="button" value="A1 On">
+        <input class="button-primary" id="a1_off" type="button"  value="A1 Off">
         <br/>
-        <input class="button-primary" id="start" type="button" value="Start">
-        <input class="button-primary" id="stop" type="button"  value="Stop">
+        <input class="button-primary" id="a2_on" type="button" value="A2 On">
+        <input class="button-primary" id="a2_off" type="button"  value="A2 Off">
         <br/>
+        <input class="button-primary" id="a3_on" type="button" value="A3 On">
+        <input class="button-primary" id="a3_off" type="button"  value="A3 Off">
+        <br/>
+        <input class="button-primary" id="a4_on" type="button" value="A4 On">
+        <input class="button-primary" id="a4_off" type="button"  value="A4 Off">
+        <br/>
+        <input class="button-primary" id="a5_on" type="button" value="A5 On">
+        <input class="button-primary" id="a5_off" type="button"  value="A5 Off">
+        <br/>
+        <input class="button-primary" id="a6_on" type="button" value="A6 On">
+        <input class="button-primary" id="a6_off" type="button"  value="A6 Off">
+        <br/>
+        <input class="button-primary" id="a7_on" type="button" value="A7 On">
+        <input class="button-primary" id="a7_off" type="button"  value="A7 Off">
+        <br/>
+        <input class="button-primary" id="a8_on" type="button" value="A8 On">
+        <input class="button-primary" id="a8_off" type="button"  value="A8 Off">
       </div>
 
       <div class="one-half column" style="margin-top: 25%">
         <h4>X10 Status</h4>
-        <pre></code>
-sldf
+        <pre><code id="status">
         </code></pre>
       </div>
     </div>
