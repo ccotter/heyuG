@@ -4,7 +4,7 @@ def parse_status_text(txt):
     """ Returns a dict representing the state of a given house code
     from the `heyu status` output. """
 
-    search = re.compile("Status of monitored devices.*0x(................)")
+    search = re.compile("Status of monitored devices.*\((................)\)")
 
     devices = None
     for l in txt.splitlines():

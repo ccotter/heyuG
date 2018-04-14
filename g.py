@@ -5,7 +5,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-if False:
+if True:
     import heyu
 else:
     import heyu_mock as heyu
@@ -24,8 +24,9 @@ def serve_css(css):
 @app.route("/heyu/status")
 def handle_status():
     try:
-        status = heyu.get_status()
-        return json.dumps(status)
+        status = json.dumps(heyu.get_status())
+        print(status)
+        return status
     except:
         logger.error("get_status failed")
         raise
