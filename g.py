@@ -1,8 +1,14 @@
 import flask
 from flask import render_template
 import json
+import logging
 
-import heyu
+logger = logging.getLogger(__name__)
+
+if False:
+    import heyu
+else:
+    import heyu_mock as heyu
 
 app = flask.Flask(__name__)
 
@@ -22,6 +28,7 @@ def handle_status():
         return status
     except:
         logger.error("get_status failed")
+        raise
     return "Command failed!"
 
 @app.route("/heyu/commands/<command>", methods=["POST"])
