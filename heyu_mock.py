@@ -1,6 +1,8 @@
 import subprocess
 import logging
 
+from heyuG.util import parse_status_text
+
 logger = logging.getLogger(__name__)
 
 OFF = 0
@@ -22,11 +24,18 @@ class State(object):
             r += "1" if self.hu["A"][15-i] else "0"
         return r
 
-    def get_status(self):
+    def get_status_txt(self):
         return """Last addressed device =       0x
 Status of monitored devices = 0x{}
 Status of dimmed devices =    0x
 """.format(self.status_as_bitmap())
+
+    def get_status(self):
+        txt = self.get_status_txt()
+        return {
+            "txt": txt,
+            "devices": parse_status_text(txt)
+        }
 
     def all_on(self):
         for i in range(0, 16):

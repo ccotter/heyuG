@@ -21,6 +21,7 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/skeleton.css">
+  <link rel="stylesheet" href="css/toggle.css">
 
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -33,13 +34,20 @@ $(document).ready(function() {
 
 function fetch_status() {
     $.get("/heyu/status", function(status) {
-        $("#status").text(status);
+        status = JSON.parse(status);
+        $("#status").text(status.txt);
+
+        var devices = status.devices;
+        Object.keys(devices).forEach(function(k) {
+            console.log(devices[k]);
+            $("#hc_checkbox_" + k).prop("checked", devices[k]);
+        });
     });
 }
 
-function handle_post(which) {
-    $.post("/heyu/commands/" + which, {}, function() {
-        console.log("Finished post for", which, "button");
+function handle_post(cmd) {
+    $.post("/heyu/commands/" + cmd, {}, function() {
+        console.log("Finished post for", cmd, "button");
         fetch_status();
     });
 }
@@ -53,29 +61,47 @@ set_button_handler("stop");
 set_button_handler("all_on");
 set_button_handler("all_off");
 
+function set_toggle_handler(which) {
+  $("#hc_checkbox_" + which).on("click", function(which) {
+      var cb = $("#hc_checkbox_" + which);
+      var hu = cb.data("hu");
+      var cmd = "";
+      if (cb.prop("checked")) {
+        cmd = hu + "_on";
+      } else {
+        cmd = hu + "_off";
+      }
+      handle_post(cmd);
+      }.bind(undefined, which));
+}
+
 for (var i = 1; i < 9; ++i) {
-    set_button_handler("hu_" + i + "_on");
-    set_button_handler("hu_" + i + "_off");
+    set_toggle_handler(i);
+}
+
+function set_code_selector(code) {
+    for (var i = 1; i < 9; ++i) {
+        $("#hc_label_" + i).html(code + i);
+        $("#hc_checkbox_" + i).data("hu", code + i);
+    }
 }
 
 function handle_code_selector(code) {
-  $("#select_" + code).on("click", function(which) {
-    console.log(arguments);
-    for (var i = 1; i < 9; ++i) {
-        $("#hu_" + i + "_on").prop("value", code + i + " ON");
-        $("#hu_" + i + "_off").prop("value", code + i + " OFF");
-    }
+  $("#select_" + code).on("click", function() {
+      set_code_selector(code);
 });
 }
 
 handle_code_selector("A");
-handle_code_selector("B");
-handle_code_selector("C")
-handle_code_selector("D")
-handle_code_selector("E")
-handle_code_selector("F")
-handle_code_selector("G")
-handle_code_selector("H")
+//handle_code_selector("B");
+//handle_code_selector("C")
+//handle_code_selector("D")
+//handle_code_selector("E")
+//handle_code_selector("F")
+//handle_code_selector("G")
+//handle_code_selector("H")
+
+set_code_selector("A");
 
 fetch_status();
 
@@ -95,13 +121,17 @@ fetch_status();
         <p>Control your X10 via the control board below</p>
 
         <input class="button-primary" id="select_A" type="button" value="A">
-        <input class="button-primary" id="select_B" type="button" value="B">
-        <input class="button-primary" id="select_C" type="button" value="C">
-        <input class="button-primary" id="select_D" type="button" value="D">
-        <input class="button-primary" id="select_E" type="button" value="E">
-        <input class="button-primary" id="select_F" type="button" value="F">
-        <input class="button-primary" id="select_G" type="button" value="G">
-        <input class="button-primary" id="select_H" type="button" value="H">
+        <input class="button" id="select_B" type="button" value="B">
+        <br/>
+        <input class="button" id="select_C" type="button" value="C">
+        <input class="button" id="select_D" type="button" value="D">
+        <br/>
+        <input class="button" id="select_E" type="button" value="E">
+        <input class="button" id="select_F" type="button" value="F">
+        <br/>
+        <input class="button" id="select_G" type="button" value="G">
+        <input class="button" id="select_H" type="button" value="H">
+        <br/>
       </div>
 
       <div class="two-thirds column" style="margin-top: 5%">
@@ -109,35 +139,58 @@ fetch_status();
         <pre><code id="status">
         </code></pre>
 
-        <input class="button-primary" id="start" type="button" value="Start">
-        <input class="button-primary" id="stop" type="button"  value="Stop">
+        <span style="font-size: 4.0rem;" id="hc_label_1">A1</span>
+        <label class="switch">
+          <input type="checkbox" id="hc_checkbox_1"/>
+          <span class="slider round"></span>
+        </label>
+        <span style="padding: 25px;"></span>
+        <span style="font-size: 4.0rem;" id="hc_label_2">A2</span>
+        <label class="switch">
+          <input type="checkbox" id="hc_checkbox_2"/>
+          <span class="slider round"></span>
+        </label>
         <br/>
-        <input class="button-primary" id="all_on" type="button" value="All On">
-        <input class="button-primary" id="all_off" type="button"  value="All Off">
+
+        <span style="font-size: 4.0rem;" id="hc_label_3">A3</span>
+        <label class="switch">
+          <input type="checkbox" id="hc_checkbox_3"/>
+          <span class="slider round"></span>
+        </label>
+        <span style="padding: 25px;"></span>
+        <span style="font-size: 4.0rem;" id="hc_label_4">A4</span>
+        <label class="switch">
+          <input type="checkbox" id="hc_checkbox_4"/>
+          <span class="slider round"></span>
+        </label>
         <br/>
-        <input class="button-primary" id="hu_1_on" type="button" value="A1 On">
-        <input class="button-primary" id="hu_1_off" type="button"  value="A1 Off">
+
+        <span style="font-size: 4.0rem;" id="hc_label_5">A5</span>
+        <label class="switch">
+          <input type="checkbox" id="hc_checkbox_5"/>
+          <span class="slider round"></span>
+        </label>
+        <span style="padding: 25px;"></span>
+        <span style="font-size: 4.0rem;" id="hc_label_6">A6</span>
+        <label class="switch">
+          <input type="checkbox" id="hc_checkbox_6"/>
+          <span class="slider round"></span>
+        </label>
         <br/>
-        <input class="button-primary" id="hu_2_on" type="button" value="A2 On">
-        <input class="button-primary" id="hu_2_off" type="button"  value="A2 Off">
+
+        <span style="font-size: 4.0rem;" id="hc_label_7">A7</span>
+        <label class="switch">
+          <input type="checkbox" id="hc_checkbox_7"/>
+          <span class="slider round"></span>
+        </label>
+        <span style="padding: 25px;"></span>
+        <span style="font-size: 4.0rem;" id="hc_label_8">A8</span>
+        <label class="switch">
+          <input type="checkbox" id="hc_checkbox_8"/>
+          <span class="slider round"></span>
+        </label>
         <br/>
-        <input class="button-primary" id="hu_3_on" type="button" value="A3 On">
-        <input class="button-primary" id="hu_3_off" type="button"  value="A3 Off">
-        <br/>
-        <input class="button-primary" id="hu_4_on" type="button" value="A4 On">
-        <input class="button-primary" id="hu_4_off" type="button"  value="A4 Off">
-        <br/>
-        <input class="button-primary" id="hu_5_on" type="button" value="A5 On">
-        <input class="button-primary" id="hu_5_off" type="button"  value="A5 Off">
-        <br/>
-        <input class="button-primary" id="hu_6_on" type="button" value="A6 On">
-        <input class="button-primary" id="hu_6_off" type="button"  value="A6 Off">
-        <br/>
-        <input class="button-primary" id="hu_7_on" type="button" value="A7 On">
-        <input class="button-primary" id="hu_7_off" type="button"  value="A7 Off">
-        <br/>
-        <input class="button-primary" id="hu_8_on" type="button" value="A8 On">
-        <input class="button-primary" id="hu_8_off" type="button"  value="A8 Off">
+
       </div>
     </div>
   </div>

@@ -25,7 +25,7 @@ def serve_css(css):
 def handle_status():
     try:
         status = heyu.get_status()
-        return status
+        return json.dumps(status)
     except:
         logger.error("get_status failed")
         raise

@@ -1,6 +1,8 @@
 import subprocess
 import logging
 
+from heyuG.util import parse_status_text
+
 logger = logging.getLogger(__name__)
 
 def _run(args):
@@ -11,7 +13,11 @@ def _run(args):
 
 def get_status():
     args = ["heyu", "info"]
-    return _run(args)
+    txt = _run(args)
+    return {
+        "txt": txt,
+        "devices": parse_status_text(txt)
+    }
 
 def all_on():
     args = ["heyu", "allon", "A"]
